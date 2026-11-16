@@ -119,13 +119,17 @@ function AdminDashboard() {
     clearMsg();
     setLoginError('');
 
-    if (!loginEmail || !loginPassword) {
+    const d = new FormData(e.currentTarget);
+    const email = String(d.get('email') || '').trim();
+    const password = String(d.get('password') || '');
+
+    if (!email || !password) {
       setLoginError('Both email and password are required.');
       return;
     }
 
-    if (loginEmail === LOGIN_EMAIL && loginPassword === LOGIN_PASSWORD) {
-      setSession({ user: { email: loginEmail } });
+    if (email === LOGIN_EMAIL && password === LOGIN_PASSWORD) {
+      setSession({ user: { email } });
       setMsg('Signed in. The dummy workspace is ready.');
     } else {
       setLoginError('Incorrect email or password. Use admin@smengineers.com / smengineers2026.');
@@ -232,12 +236,12 @@ function AdminDashboard() {
               </div>
               <h1 className="admin-auth-title">Administrator sign in</h1>
               <p className="admin-auth-sub">Use the credentials below to open the workspace. No backend is deployed, so sign-in checks against a local dummy account.</p>
-              <form className="admin-auth-form" onSubmit={handleLogin}>
+              <form className="admin-auth-form" onSubmit={handleLogin} noValidate>
                 <div className="field-row">
-                  <label>Email address<input type="email" required value={loginEmail} onChange={e => setLoginEmail(e.target.value)} placeholder="admin@smengineers.com" /></label>
+                  <label>Email address<input type="email" name="email" required placeholder="admin@smengineers.com" /></label>
                 </div>
                 <div className="field-row">
-                  <label>Password<input type="password" required value={loginPassword} onChange={e => setLoginPassword(e.target.value)} placeholder="••••••••" /></label>
+                  <label>Password<input type="password" name="password" required placeholder="••••••••" /></label>
                 </div>
                 {loginError && <p className="admin-message error">{loginError}</p>}
                 {msg && !loginError && <p className="admin-message">{msg}</p>}
